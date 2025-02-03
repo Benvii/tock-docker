@@ -1,6 +1,10 @@
 # Github Workflow that build docker images using maven Fabrik IO
 name: Docker CI/CD thought maven
 
+# Work in progress :
+# -> Study external AND manual trigger with a set of specific versions for tock (and maybe other components)
+
+
 on:
   push:
     branches:
@@ -19,4 +23,4 @@ jobs:
           distribution: 'corretto' # See 'Supported distributions' for available options
           java-version: '23' # Based on the version used in the docker images
       - name: Build docker images using maven (fabric8io)
-        run:  mvn package docker:build
+        run:  mvn package docker:build -pl "!tock-llm-indexing-tools" # Ignore tock-llm-indexing-tools as it reference a local dependency
