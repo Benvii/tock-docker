@@ -17,6 +17,6 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto' # See 'Supported distributions' for available options
-          java-version: '23.0.2' # Based on the version used in the docker images
+          java-version: '23' # Based on the version used in the docker images
       - name: Build docker images using maven (fabric8io)
         run:  mvn package docker:build
