@@ -1,0 +1,22 @@
+# Github Workflow that build docker images using maven Fabrik IO
+name: Docker CI/CD thought maven
+
+on:
+  push:
+    branches:
+      - github_actions_ci_cd_tests
+  # TODO hanlde PR events
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Install JAVA and maven toolchain
+      - name: Setup Java and Maven using the same version as the docker
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto' # See 'Supported distributions' for available options
+          java-version: '23.0.2' # Based on the version used in the docker images
+      - name: Build docker images using maven (fabric8io)
+        run:  mvn package docker:build
