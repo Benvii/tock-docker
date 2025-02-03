@@ -32,4 +32,4 @@ jobs:
           TOCK_VERSION: ${{ inputs.tock_version }} # Optionnal tock_version to override pom.xml's version
         run: |
           mvn package docker:build ${TOCK_VERSION:+-Dtock="$TOCK_VERSION"} \
-            -pl "!llm-indexing-tools" \# Ignore tock-llm-indexing-tools as it reference a local dependency
+            -pl "!llm-indexing-tools" # Ignore tock-llm-indexing-tools as it reference a local dependency
