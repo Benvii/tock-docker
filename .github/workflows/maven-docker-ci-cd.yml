@@ -23,4 +23,4 @@ jobs:
           distribution: 'corretto' # See 'Supported distributions' for available options
           java-version: '23' # Based on the version used in the docker images
       - name: Build docker images using maven (fabric8io)
-        run:  mvn package docker:build -pl "!tock-llm-indexing-tools" # Ignore tock-llm-indexing-tools as it reference a local dependency
+        run:  mvn package docker:build -pl "!llm-indexing-tools" # Ignore tock-llm-indexing-tools as it reference a local dependency
