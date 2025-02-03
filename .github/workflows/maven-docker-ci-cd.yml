@@ -6,6 +6,11 @@ name: Docker CI/CD thought maven
 
 
 on:
+  workflow_dispatch:
+    inputs:
+      tock_version:
+        description: "The version of tock released on maven central. Default to the version defined in the pom.xml"
+        required: false
   push:
     branches:
       - github_actions_ci_cd_tests
@@ -23,4 +28,8 @@ jobs:
           distribution: 'corretto' # See 'Supported distributions' for available options
           java-version: '23' # Based on the version used in the docker images
       - name: Build docker images using maven (fabric8io)
-        run:  mvn package docker:build -pl "!llm-indexing-tools" # Ignore tock-llm-indexing-tools as it reference a local dependency
+        env:
+          TOCK_VERSION: ${{ inputs.tock_version }} # Optionnal tock_version to override pom.xml's version
+        run: |
+          mvn package docker:build ${TOCK_VERSION:+-Dtock="$TOCK_VERSION"} \
+            -pl "!llm-indexing-tools" \# Ignore tock-llm-indexing-tools as it reference a local dependency
