@@ -1,5 +1,6 @@
 # Github Workflow that build docker images using maven Fabrik IO
 name: Docker CI/CD thought maven
+run-name: "[tock: ${{ inputs.tock_version }}] Docker images build"
 
 # Work in progress :
 # -> Study external AND manual trigger with a set of specific versions for tock (and maybe other components)
