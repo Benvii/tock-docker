@@ -1,10 +1,10 @@
 # Github Workflow that build docker images using maven Fabrik IO
 name: Docker CI/CD thought maven
-run-name: "[tock: ${{ inputs.tock_version }}] Docker images build"
+run-name: "[tock: ${{ inputs.tock_version || 'default' }}] Docker images build"
 
 # Work in progress :
 # -> Study external AND manual trigger with a set of specific versions for tock (and maybe other components)
-
+# Document TOCK_WORKFLOW_ACTION_READ_PAT secret with action:read access to tock repo used to download artifacts
 
 on:
   workflow_dispatch:
@@ -12,6 +12,14 @@ on:
       tock_version:
         description: "The version of tock released on maven central. Default to the version defined in the pom.xml"
         required: false
+      tock_workflow_repo_full_name:
+        description: "Workflow owner/repo used to build tock."
+        required: false
+      tock_workflow_m2_artifact_name:
+        description: "Workflow .m2 repository artifact name, containing all tock artifacts"
+      tock_workflow_run_id:
+        description: "Workflow run ID, that build tock."
+
   push:
     branches:
       - github_actions_ci_cd_tests
@@ -28,6 +36,21 @@ jobs:
         with:
           distribution: 'corretto' # See 'Supported distributions' for available options
           java-version: '23' # Based on the version used in the docker images
+
+      - name: Retrieve tock build for a github workflow
+        # Check that all inputs are correctly set
+        if: "${{ github.event.inputs.tock_workflow_repo_full_name != '' && github.event.inputs.tock_workflow_m2_artifact_name != '' && github.event.inputs.tock_workflow_run_id != ''  }}"
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ github.event.inputs.tock_workflow_m2_artifact_name }}
+          github-token: ${{ secrets.TOCK_WORKFLOW_ACTION_READ_PAT }} # token with actions:read permissions on target repo
+          repository: ${{ github.event.inputs.tock_workflow_repo_full_name }}
+          run-id: ${{ github.event.inputs.tock_workflow_run_id }}
+          path: ~/.m2/repository/
+
+      - name: DEBUG - List local tock artifacts
+        run: ls -lisha ~/.m2/repository/**/** -R
+
       - name: Build docker images using maven (fabric8io)
         env:
           TOCK_VERSION: ${{ inputs.tock_version }} # Optionnal tock_version to override pom.xml's version
