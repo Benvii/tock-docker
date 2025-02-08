@@ -17,8 +17,10 @@ on:
         required: false
       tock_workflow_m2_artifact_name:
         description: "Workflow .m2 repository artifact name, containing all tock artifacts"
+        required: false
       tock_workflow_run_id:
         description: "Workflow run ID, that build tock."
+        required: false
 
   push:
     branches:
