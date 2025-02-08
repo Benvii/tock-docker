@@ -51,6 +51,7 @@ jobs:
           path: ~/.m2/repository/
 
       - name: DEBUG - List local tock artifacts
+        if: "${{ github.event.inputs.tock_workflow_repo_full_name != '' && github.event.inputs.tock_workflow_m2_artifact_name != '' && github.event.inputs.tock_workflow_run_id != ''  }}"
         run: ls -lisha ~/.m2/repository/**/** -R
 
       - name: Build docker images using maven (fabric8io)
